@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+configMapGenerator:
+- files:
+  - config.yaml=config/config.yaml
+  name: price-tracker
+namespace: price-tracker
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/instance: price-tracker-1
+    app.kubernetes.io/part-of: price-tracker
+resources:
+- price-tracker.podmonitor.yaml
+- price-tracker.deployment.yaml

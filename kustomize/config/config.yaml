@@ -1,0 +1,139 @@
+prometheus:
+  address: 0.0.0.0:9025
+
+curl:
+  binary: /usr/bin/curl
+
+extractors:
+    attribute:
+      kruidvat:
+        attribute: data-price
+        selector: e2-apply-on-connect
+    innerText:
+      albertheijn:
+        selector: "#start-of-content .product-hero_root__meolU
+          [data-testhook=price-amount]"
+      aldi:
+        selector: .mod-article-intro__price .price .price__wrapper
+      hoogvliet_price_cents:
+        selector: .price-display-container .price-cents
+      hoogvliet_price_euros:
+        selector: .price-display-container .price-euros
+      jumbo_fractional:
+        selector: .jum-panel .current-price .fractional
+      jumbo_whole:
+        selector: .jum-panel .current-price .whole
+scrape:
+  userAgents:
+    - Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+    - Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0
+  cookies:
+    hoogvliet.com:
+      incap_ses_1084_2265421=: JU9eHc5t4iBVagJraSULD5EFpGUAAAAAdvslVc8v08M1k9N1NPDjtQ==
+      incap_ses_1689_2265421=: 5s4QMZTM5npNrTMmm4hwF5IFpGUAAAAArev4fmqInAH4+gOIeXl4NQ==
+      incap_ses_697_2265421=: ZsrATs/CZy2UWlRP/T6sCZIFpGUAAAAAq2106SmLGnUoA1YMXfIUEQ==
+      nlbi_2265421=: YZG6fmteKlkVAg3iFSnXtwAAAACtAxMzchGWjINP2WuFtHNQ
+  targets:
+    - http1: true
+      name: elvive_conditioner
+      compression: true
+      httpversion: "2"
+      page: https://www.kruidvat.nl/loreal-paris-elvive-dream-lengths-conditioner/p/4324244
+      script: result := ex.kruidvat(page)
+      labels:
+        name: elvive_conditioner
+        product_name: conditioner
+        product_variation: dream_length
+        retailer: kruidvat
+    - 
+      name: casadimama_salame_piccante
+      page: https://www.hoogvliet.com/product/dr-oetker-casa-di-mama-pizza-salami?tracking=searchterm:Casa+di+Mama+
+      script: |-
+        euro := ex.hoogvliet_price_euros(page)
+        cents := ex.hoogvliet_price_cents(page) / 100
+        result := euro + cents
+      labels:
+        product_name: pizza
+        product_variation: Salame_extra_piccante
+        retailer: hoogvliet
+    - 
+      name: bic_scheermesjes
+      compression: true
+      httpversion: "2"
+      page: https://www.kruidvat.nl/bic-3-sensitive-scheermesjes/p/2767129
+      script: result := ex.kruidvat(page)
+      labels:
+        product_name: scheermesjes
+        product_variation: wegwerp
+        retailer: kruidvat
+    - 
+      name: elvive_shampoo
+      compression: true
+      httpversion: "2"
+      page: https://www.kruidvat.nl/loreal-paris-elvive-dream-lengths-shampoo/p/4324237
+      script: result := ex.kruidvat(page)
+      labels:
+        product_name: shampoo
+        product_variation: dream_length
+        retailer: kruidvat
+    - name: aldi_kaas
+      page: https://www.aldi.nl/producten/kaas-vleeswaren-tapas/kaas/goudse-kaas-48-jong-2002184-1-0.article.html
+      script: result := ex.aldi(page)
+      labels:
+        product_name: kaas
+        product_variation: blok
+        retailer: aldi
+    - name: albert_heijn_melk
+      compression: true
+      httpversion: "2"
+      page: https://www.ah.nl/producten/product/wi200486/de-zaanse-hoeve-halfvolle-melk
+      script: result := ex.albertheijn(page)
+      labels:
+        product_name: melk
+        product_variation: halfvol
+        retailer: albertheijn
+    - name: aldi_melk
+      page: https://www.aldi.nl/producten/zuivel-eieren-boter/verse-zuivel/verse-halfvolle-melk-6588-1-0.article.html
+      script: result := ex.aldi(page)
+      labels:
+        product_name: melk
+        product_variation: halfvol
+        retailer: aldi
+    - name: hoogvliet_halfvolle_melk
+      page: https://www.hoogvliet.com/product/zuivelmeester-halfvolle-melk
+      script: |-
+        euro := ex.hoogvliet_price_euros(page)
+        cents := ex.hoogvliet_price_cents(page) / 100
+        result := euro + cents
+      labels:
+        product_name: melk
+        product_variation: halfvol
+        retailer: hoogvliet
+    - name: jumbo_melk
+      page: https://www.jumbo.com/producten/jumbo-verse-halfvolle-melk-2l-67649PAK
+      script: |-
+        euro := ex.jumbo_whole(page)
+        cents := ex.jumbo_fractional(page) / 100
+        result := euro + cents
+      labels:
+        product_name: melk
+        product_variation: halfvol
+        retailer: jumbo
+    - name: mozzarella_pizza_aldi
+      page: https://www.aldi.nl/producten/diepvries/pizza-maaltijden-snacks/pizza-mozzarella-9690-1-0.article.html
+      script: result := ex.aldi(page)
+      labels:
+        product_name: pizza
+        product_variation: mozzarella
+        retailer: aldi
+    - name: casadimama_salame_piccante
+      page: https://www.jumbo.com/producten/dr-oetker-casa-di-mama-pizza-salame-extra-piccante-415g-143762PAK
+      script: |-
+        euro := ex.jumbo_whole(page)
+        cents := ex.jumbo_fractional(page) / 100
+        result := euro + cents
+      labels:
+        product_name: pizza
+        product_variation: Salame_extra_piccante
+        retailer: jumbo
+

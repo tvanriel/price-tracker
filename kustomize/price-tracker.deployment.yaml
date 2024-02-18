@@ -1,0 +1,43 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  price-tracker
+  namespace: default
+  labels:
+    app.kubernetes.io/component: price-tracker
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: price-tracker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: price-tracker
+    spec:
+      containers:
+      - name:  price-tracker
+        image:  mitaka8/price-tracker
+        imagePullPolicy: Always
+        livenessProbe:
+          tcpSocket:
+            port: 9025
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort:  9025
+          name: metrics
+        volumeMounts:
+        - name: config
+          mountPath: /etc/scrape
+      volumes:
+        - name: config
+          configMap:
+            name: price-tracker
+      restartPolicy: Always
+---
+
