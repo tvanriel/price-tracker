@@ -44,7 +44,7 @@ func (c *CurlHttp) Do(ctx context.Context, req Request) (Response, error) {
 
 	headers := req.Headers()
 	for k := range headers {
-		args = append(args, "-H", strings.Join([]string{k, "=", strings.Join(headers[k], ";")}, ""))
+                args = append(args, "-H", strings.Join([]string{k, ": ", strings.Join(headers[k], ";")}, ""))
 
 	}
 

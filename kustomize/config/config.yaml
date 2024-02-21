@@ -34,12 +34,16 @@ scrape:
       incap_ses_697_2265421=: ZsrATs/CZy2UWlRP/T6sCZIFpGUAAAAAq2106SmLGnUoA1YMXfIUEQ==
       nlbi_2265421=: YZG6fmteKlkVAg3iFSnXtwAAAACtAxMzchGWjINP2WuFtHNQ
   targets:
-    - http1: true
+    - 
       name: elvive_conditioner
       compression: true
       httpversion: "2"
       page: https://www.kruidvat.nl/loreal-paris-elvive-dream-lengths-conditioner/p/4324244
       script: result := ex.kruidvat(page)
+      headers:
+        - Accept-Language: 
+          - en-US,en
+          - q=0.5
       labels:
         name: elvive_conditioner
         product_name: conditioner
@@ -61,6 +65,10 @@ scrape:
       compression: true
       httpversion: "2"
       page: https://www.kruidvat.nl/bic-3-sensitive-scheermesjes/p/2767129
+      headers:
+        - Accept-Language: 
+          - en-US,en
+          - q=0.5
       script: result := ex.kruidvat(page)
       labels:
         product_name: scheermesjes
@@ -71,6 +79,10 @@ scrape:
       compression: true
       httpversion: "2"
       page: https://www.kruidvat.nl/loreal-paris-elvive-dream-lengths-shampoo/p/4324237
+      headers:
+        - Accept-Language: 
+          - en-US,en
+          - q=0.5
       script: result := ex.kruidvat(page)
       labels:
         product_name: shampoo
@@ -111,6 +123,7 @@ scrape:
         retailer: hoogvliet
     - name: jumbo_melk
       page: https://www.jumbo.com/producten/jumbo-verse-halfvolle-melk-2l-67649PAK
+      httpversion: "2"
       script: |-
         euro := ex.jumbo_whole(page)
         cents := ex.jumbo_fractional(page) / 100
@@ -126,7 +139,8 @@ scrape:
         product_name: pizza
         product_variation: mozzarella
         retailer: aldi
-    - name: casadimama_salame_piccante
+    - name: jumbo_casadimama_salame_piccante
+      httpversion: "2"
       page: https://www.jumbo.com/producten/dr-oetker-casa-di-mama-pizza-salame-extra-piccante-415g-143762PAK
       script: |-
         euro := ex.jumbo_whole(page)
